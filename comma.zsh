@@ -7,6 +7,8 @@ fi
 
 program=$1
 
+# Find all packages that contain the binary we're trying to run, discarding
+# "meta" packages that just wrap other programs (currently just cope).
 IFS=$'\n' derivations=( $(@nix-index@/bin/nix-locate --top-level --minimal --whole-name /bin/$program |
                           @toybox@/bin/grep -v '^cope.out$') )
 
@@ -23,4 +25,5 @@ case ${#derivations[@]} in
 		;;
 esac
 
+# TODO: The official comma uses -f <nixpkgs> if it is defined in path. We should do that too, depending on the behavior of nix-index.
 @nix@/bin/nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#${derivation} --command "$@"
