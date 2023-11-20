@@ -1,0 +1,26 @@
+#!@zsh@/bin/zsh
+
+if [ $# -lt 1 ]; then
+	echo >&2 "Usage: $0 program [args...]"
+	exit 1
+fi
+
+program=$1
+
+IFS=$'\n' derivations=( $(@nix-index@/bin/nix-locate --top-level --minimal --whole-name /bin/$program |
+                          @toybox@/bin/grep -v '^cope.out$') )
+
+case ${#derivations[@]} in
+	0)
+		echo >&2 "Executable '$program' not found in database"
+		exit 1
+		;;
+	1)
+		derivation=${derivations[1]}
+		;;
+	*)
+		derivation=$(printf '%s\n' ${derivations[@]} | @fzy@/bin/fzy)
+		;;
+esac
+
+@nix@/bin/nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#${derivation} --command "$@"
