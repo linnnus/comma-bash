@@ -33,5 +33,11 @@ case ${#derivations[@]} in
 		;;
 esac
 
+# If user presses CTRL-D then `give` will give empty string.
+if [ -z "$derivation" ]; then
+	echo "No derivation selected. Aborting." >&2
+	exit 1
+fi
+
 # TODO: The official comma uses -f <nixpkgs> if it is defined in path. We should do that too, depending on the behavior of nix-index.
 @nix@/bin/nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#${derivation} --command $sudo "$@"
