@@ -1,7 +1,15 @@
 #!@zsh@/bin/zsh
 
+# Special case: if the program is `sudo` we actually run the utility with
+# `sudo` instead of looking for a package with `/bin/sudo`.
+sudo=""
+if [ $1 = "sudo" ]; then
+	shift
+	sudo="sudo"
+fi
+
 if [ $# -lt 1 ]; then
-	echo >&2 "Usage: $0 program [args...]"
+	echo >&2 "Usage: $0 [sudo] program [args...]"
 	exit 1
 fi
 
@@ -26,4 +34,4 @@ case ${#derivations[@]} in
 esac
 
 # TODO: The official comma uses -f <nixpkgs> if it is defined in path. We should do that too, depending on the behavior of nix-index.
-@nix@/bin/nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#${derivation} --command "$@"
+@nix@/bin/nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#${derivation} --command $sudo "$@"
