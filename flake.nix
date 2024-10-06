@@ -13,26 +13,26 @@
 
         comma-drv = pkgs.stdenv.mkDerivation {
           pname = "comma";
-          version = "1.0.0";
+          version = "1.1.0";
 
           src = ./.;
 
           buildPhase = with pkgs; ''
-            substituteInPlace comma.zsh \
-              --replace @zsh@ "${zsh}" \
+            substituteInPlace comma.bash \
+              --replace @bash@ "${bash}" \
               --replace @nix-index@ "${nix-index}" \
               --replace @toybox@ "${toybox}" \
               --replace @nix@ "${nix}" \
               --replace @fzy@ "${fzy}"
 
-            chmod +x comma.zsh
+            chmod +x comma.bash
           '';
           preferLocalBuilds = true;
           allowSubstitutes = false;
 
           installPhase = ''
             mkdir -p $out/bin
-            mv comma.zsh $out/bin/comma
+            mv comma.bash $out/bin/comma
             ln -s $out/bin/comma $out/bin/,
           '';
         };
