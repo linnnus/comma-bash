@@ -25,7 +25,7 @@ case ${#derivations[@]} in
 		exit 1
 		;;
 	1)
-		derivation="${derivations[1]}"
+		derivation="${derivations[0]}"
 		;;
 	*)
 		derivation="$(printf '%s\n' "${derivations[@]}" | @fzy@/bin/fzy)"
