@@ -18,7 +18,7 @@ program="$1"
 # Find all packages that contain the binary we're trying to run, discarding:
 # - packages that just wrap other programs (currently just cope)
 # - "Unwrapped" packages (which are more useful in their wrapped version)
-mapfile -t derivations < <(@nix-index@/bin/nix-locate --top-level --minimal --whole-name /bin/"$program" | @toybox@/bin/egrep -v '^cope\.out|.*-unwrapped\.out$')
+mapfile -t derivations < <(@nix-index@/bin/nix-locate --minimal --whole-name /bin/"$program" | @toybox@/bin/egrep -v '^cope\.out|.*-unwrapped\.out$')
 
 case ${#derivations[@]} in
 	0)
